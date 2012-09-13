@@ -1,3 +1,11 @@
+/* Descrizione: Share your files with PCs that are in your LAN
+ * Sviluppatore: Paolo Stivanin
+ * Versione: 1.0.0-alpha1 
+ * Copyright: 2012
+ * Licenza: GNU AGPL v3 <http://www.gnu.org/licenses/agpl-3.0.html>
+ * Sito web: <https://github.com/polslinux/LanDND>
+ */
+
 #define _GNU_SOURCE
 
 #include <stdio.h>
@@ -74,20 +82,20 @@ int do_send(void){
 		printf("Error during socket creation\n");
 		free(ipv4_server);
 		return -1;
-  	}
+  }
 
-    if(connect(sockd, (struct sockaddr *) &remote_server_addr, sizeof(remote_server_addr)) < 0){
-    	printf("Connection error\n");
-    	free(ipv4_server);
-    	close(sockd);
-    	return -1;
-  	}
+  if(connect(sockd, (struct sockaddr *) &remote_server_addr, sizeof(remote_server_addr)) < 0){
+  	printf("Connection error\n");
+   	free(ipv4_server);
+   	close(sockd);
+   	return -1;
+  }
 
 	printf("Drag here the file to send: ");
 	if(scanf("%m[^\n]%*c", &tmp_input) == EOF){
 		printf("\nscanf ERROR, exiting...\n");
-    	free(ipv4_server);
-    	close(sockd);
+   	free(ipv4_server);
+   	close(sockd);
 		return -1;
 	}
 	if(*tmp_input == *is_gnome) input_file = strtok(tmp_input, "'"); /* se il primo carattere è ' allora lo tolgo */
@@ -96,7 +104,7 @@ int do_send(void){
 		printf("stat ERROR, exiting...\n");
 		if(is_set == 1) free(input_file);
 		free(tmp_input);
-    	free(ipv4_server);
+    free(ipv4_server);
 		free(input_file);
 		close(sockd);
 		return -1;
@@ -114,18 +122,18 @@ int do_send(void){
 	fsize = strlen(file)+1;
 	if(send(sockd, &fsize, sizeof(fsize), 0) < 0){
 		printf("Error on sending the file name length\n");
-    	free(ipv4_server);
-    	if(is_set == 1) free(input_file);
-    	free(tmp_input);
+    free(ipv4_server);
+    if(is_set == 1) free(input_file);
+    free(tmp_input);
 		free(token);
 		close(sockd);
 		return -1;
 	}
 	if(send(sockd, file, fsize, 0) < 0){
 		printf("Error on sending the file name length\n");
-    	free(ipv4_server);
-    	if(is_set == 1) free(input_file);
-    	free(tmp_input);
+    free(ipv4_server);
+    if(is_set == 1) free(input_file);
+    free(tmp_input);
 		free(token);
 		close(sockd);
 		return -1;
@@ -133,42 +141,43 @@ int do_send(void){
 	fsize = fileStat.st_size;
 	if(send(sockd, &fsize, sizeof(fsize), 0) < 0){
 		printf("Error on sending the file size\n");
-    	free(ipv4_server);
-    	if(is_set == 1) free(input_file);
-    	free(tmp_input);
+    free(ipv4_server);
+    if(is_set == 1) free(input_file);
+    free(tmp_input);
 		free(token);
 		close(sockd);
 		return -1;
 	}
-  	fd = open(input_file, O_RDONLY);
-  	if(fd < 0){
-    	printf("Error on opening file\n");
-    	free(ipv4_server);
-    	if(is_set == 1) free(input_file);
-    	free(tmp_input);
-		free(token);
-		close(sockd);
-    	return -1;
-    }
+  fd = open(input_file, O_RDONLY);
+  if(fd < 0){
+   	printf("Error on opening file\n");
+   	free(ipv4_server);
+   	if(is_set == 1) free(input_file);
+   	free(tmp_input);
+	  free(token);
+	  close(sockd);
+   	return -1;
+  }
 	for(size_to_send = fsize; size_to_send > 0; ){
-    	rc = sendfile(sockd, fd, &offset, size_to_send);
-    	if(rc <= 0){
-      		printf("Error on sendfile");
-  			close(fd);
-  			if(is_set == 1) free(input_file);
-			free(ipv4_server);
-			free(token);
-			free(tmp_input);
-			close(sockd);
-      		return -1;
-    	}
-    	size_to_send -= rc;
-  	}
-  	close(fd);
-  	free(tmp_input);
-  	if(is_set == 1) free(input_file);
+    rc = sendfile(sockd, fd, &offset, size_to_send);
+    if(rc <= 0){
+    	printf("Error on sendfile");
+      close(fd);
+  	  if(is_set == 1) free(input_file);
+      free(ipv4_server);
+      free(token);
+      free(tmp_input);
+      close(sockd);
+      return -1;
+    }
+    size_to_send -= rc;
+  }
+  close(fd);
+  free(tmp_input);
+  if(is_set == 1) free(input_file);
 	free(ipv4_server);
 	free(token);
+  printf("File sent\n");
 	close(sockd);
 	return 0;
 }
@@ -272,6 +281,7 @@ int do_recv(void){
   	close(fd);
   	free(filename);
   	free(filebuffer);
+    printf("File received\n");
     close(newsockd);
     close(sockd);
     return 0;
