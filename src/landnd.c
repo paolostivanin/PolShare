@@ -12,7 +12,7 @@ int main(int argc, char **argv){
 	len_input = strlen(argv[1])+1;
 	input_file = (char *)malloc(len_input);
 	if(input_file == NULL){
-		printf("Error during memory allocation, exiting...\n");
+		printf("Memory allocation ERROR, exiting...\n");
 		return EXIT_FAILURE;
 	}
 	strcpy(input_file, argv[1]);
