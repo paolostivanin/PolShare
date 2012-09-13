@@ -13,6 +13,6 @@ all: landnd
 
 landnd: src/landnd.c
 	@echo "--> Using ${CC} to compile... <--"
-	@echo "--> Compiling 'landnd'..."
+	@echo "--> Compiling LanDnD..."
 	@$(CC) $(CFLAGS) -o landnd src/landnd.c
 	@echo "--> All done :)"
