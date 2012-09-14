@@ -3,6 +3,12 @@
 	* ADDED: errors checking;
 	* ADDED: check if the input is a file or a dir;
 
-??/09/2012 - v1.0-alpha2
-	* ADDED: wait to the user confirmation before receive a file;
+14/09/2012 - v1.0-alpha2
+	* ADDED: wait to the user confirmation before receive a file
+	* ADDED: scan all lan IPv4 address and print active hosts
 	* ADDED: readme
+	* FIXED: some minor bugs
+
+??/09/2012 - v1.0-alpha3
+	* ADDED: custom ip entry
+	* ADDED: send multiple files
