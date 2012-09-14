@@ -48,7 +48,7 @@ then you have to choose if you want to send a file (number 1) or to receive a fi
 
 Extra options
 -------------
-`landnd -s` will search _(thanks to **nmap**)_ all the active hosts in your lan and print their IPv4.<br>
+`landnd -s` will search _(thanks to **nmap**)_ all the active hosts in your lan and it will print their IPv4.<br>
 `landnd -h` show up a simple help.
 
 License
