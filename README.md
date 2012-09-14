@@ -27,8 +27,8 @@ Requirements
 * Build Tools	_(Autoconf and Automake)_
 * Nmap			_(if you want to use the '-s' option)_
 
-Compiling
----------
+Compiling (incomplete. Just type make on the project root)
+----------------------------------------------------------------
 * Clone the repo<br>
 `git clone https://github.com/polslinux/LanDND.git`<br>
 * move inside the directory you've just downloaded:<br>
