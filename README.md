@@ -23,7 +23,7 @@ Requirements
 
 * GCC or Clang	_(if you use Clang you **must use** a version **>= 3.1**)_
 * Make
-* GNU/Linux		_(i think that it may works on Mac OSX but i'm sure that it **won't works** on MS Windows)_
+* GNU/Linux		_(LanDND may works under Mac OSX but it **won't works** under MS Windows)_
 * Build Tools	_(Autoconf and Automake)_
 * Nmap			_(if you want to use the '-s' option)_
 
