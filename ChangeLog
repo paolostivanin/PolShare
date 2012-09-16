@@ -9,6 +9,17 @@
 	* ADDED: readme
 	* FIXED: some minor bugs
 
-??/09/2012 - v1.0-alpha3
-	* ADDED: custom ip entry
+16/09/2012 - v1.0-alpha3
+	* ADDED: custom entry for static ip
 	* ADDED: send multiple files
+
+18/09/2012 - v1.0-beta1
+	* FIXED: bugs, if any
+	* ADDED: documentation (improved readme)
+	* ADDED: configure script
+
+21/09/2012 - v1.0-rc
+	* TEST: done stress test
+
+22/09/2012 - v1.0.0
+	* RELEASE: newstable release is out :)

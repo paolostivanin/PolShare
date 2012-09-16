@@ -1,3 +1,10 @@
+/* Descrizione: Share your files with PCs that are in your LAN
+ * Sviluppatore: Paolo Stivanin
+ * Copyright: 2012
+ * Licenza: GNU AGPL v3 <http://www.gnu.org/licenses/agpl-3.0.html>
+ * Sito web: <https://github.com/polslinux/LanDND>
+ */
+
 #define _GNU_SOURCE
 
 #include <stdio.h>
@@ -22,7 +29,7 @@ int do_recv(void){
 		printf("ERROR on getting IPv4 address, exiting...\n");
 		return -1;
 	}
-	uint32_t fsize = 0, total_bytes_read = 0, fsize_tmp;
+	uint32_t fsize = 0, total_bytes_read = 0, fsize_tmp, client_counter, counter = 0;
 	int fd, sockd = -1, newsockd = -1, nread = 0;
 	size_t socket_len = 0;
 	void *filebuffer = NULL;
@@ -53,36 +60,45 @@ int do_recv(void){
 	socket_len = sizeof(cli_addr);
 
 	if((newsockd = accept(sockd, (struct sockaddr *) &cli_addr, (socklen_t *) &socket_len)) < 0){
-        perror("Connection error (accept)\n");
-        close(sockd);
-        return -1;
-    }
+    perror("Connection error (accept)\n");
+    close(sockd);
+    return -1;
+  }
+  if(recv(newsockd, &client_counter, sizeof(client_counter), 0) < 0){
+    printf("Error on the number of files\n");
+    close(newsockd);
+    close(sockd);
+    return -1;
+  }
+  while(counter < client_counter){
+    fsize = total_bytes_read = nread = 0;
+    memset(yORn, 0, sizeof(yORn));
     if(recv(newsockd, &fsize, sizeof(fsize), 0) < 0){
-    	printf("Error on receiving the file name length\n");
-    	close(newsockd);
-    	close(sockd);
-    	return -1;
+      printf("Error on receiving the file name length\n");
+   	  close(newsockd);
+   	  close(sockd);
+   	  return -1;
     }
     filename = (char *)malloc(fsize);
     if(filename == NULL){
-    	printf("Error during filename memory allocation\n");
-    	close(newsockd);
-    	close(sockd);
+      printf("Error during filename memory allocation\n");
+      close(newsockd);
+      close(sockd);
     }
     if(recv(newsockd, filename, fsize, 0) < 0){
-    	printf("Error on receiving the file name\n");
-    	close(newsockd);
-    	close(sockd);
-    	free(filename);
-    	return -1;
+   	  printf("Error on receiving the file name\n");
+   	  close(newsockd);
+   	  close(sockd);
+   	  free(filename);
+   	  return -1;
     }
     fsize = 0;
     if(recv(newsockd, &fsize, sizeof(fsize), 0) < 0){
-    	printf("Error on receiving the file size\n");
-    	close(newsockd);
-    	close(sockd);
-    	free(filename);
-    	return -1;
+   	  printf("Error on receiving the file size\n");
+   	  close(newsockd);
+   	  close(sockd);
+   	  free(filename);
+   	  return -1;
     }
     printf("Do you want to receive the file '%s' which size is '%zu' bytes? (Y or N)\n", filename, fsize);
     if(scanf("%s", yORn) == EOF){
@@ -117,38 +133,40 @@ int do_recv(void){
     fsize_tmp = fsize;
     filebuffer = malloc(fsize);
     if(filebuffer == NULL){
-    	printf("Error during filebuffer memory allocation\n");
-    	close(newsockd);
-    	close(sockd);
-    	free(filename);
-    }
-  	fd = open(filename, O_CREAT | O_WRONLY, 0644);
-  	if (fd  < 0) {
-    	printf("Error during file opening\n");
-    	close(newsockd);
-    	close(sockd);
+      printf("Error during filebuffer memory allocation\n");
+      close(newsockd);
+      close(sockd);
       free(filename);
-  		free(filebuffer);
-    	return -1;
-  	}
-  	while((total_bytes_read != fsize) && ((nread = read(newsockd, filebuffer, fsize_tmp)) > 0)){
-    	if(write(fd, filebuffer, nread) != nread){
-     	  printf("Write error\n");
-     		close(newsockd);
-     		close(sockd);
-      	close(fd);
-      	free(filename);
-  			free(filebuffer);
-      	return -1;
-    	}
-    	total_bytes_read += nread;
-    	fsize_tmp -= nread;
-  	}
-  	close(fd);
-  	free(filename);
-  	free(filebuffer);
+    }
+    fd = open(filename, O_CREAT | O_WRONLY, 0644);
+    if(fd  < 0) {
+   	  printf("Error during file opening\n");
+   	  close(newsockd);
+   	  close(sockd);
+      free(filename);
+      free(filebuffer);
+   	  return -1;
+    }
+    while((total_bytes_read != fsize) && ((nread = read(newsockd, filebuffer, fsize_tmp)) > 0)){
+   	  if(write(fd, filebuffer, nread) != nread){
+   	    printf("Write error\n");
+  		  close(newsockd);
+   	    close(sockd);
+        close(fd);
+     	  free(filename);
+  		  free(filebuffer);
+     	  return -1;
+   	  }
+   	  total_bytes_read += nread;
+   	  fsize_tmp -= nread;
+    }
+    close(fd);
+    free(filename);
+    free(filebuffer);
+    counter++;
     printf("--> File received\n");
-    close(newsockd);
-    close(sockd);
-    return 0;
+  }
+  close(newsockd);
+  close(sockd);
+  return 0;
 }

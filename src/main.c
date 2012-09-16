@@ -1,6 +1,6 @@
 /* Descrizione: Share your files with PCs that are in your LAN
  * Sviluppatore: Paolo Stivanin
- * Versione: 1.0.0-alpha1 
+ * Versione: 1.0.0-alpha3
  * Copyright: 2012
  * Licenza: GNU AGPL v3 <http://www.gnu.org/licenses/agpl-3.0.html>
  * Sito web: <https://github.com/polslinux/LanDND>
@@ -11,17 +11,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <stdint.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <sys/stat.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <ifaddrs.h>
-#include <netdb.h>
-#include <sys/sendfile.h>
-#include <fcntl.h>
 #include "landnd.h"
 
 int main(int argc, char **argv){

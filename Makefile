@@ -11,8 +11,8 @@ endif
 
 all: landnd
 
-landnd: src/main.c src/get_ipv4.c src/get_connected_ip.c src/do_send.c src/do_recv.c
+landnd: src/main.c src/get_ipv4.c src/get_connected_ip.c src/do_send.c src/do_recv.c src/get_ip_from_file.c src/remove_char.c
 	@echo "--> Using ${CC} to compile... <--"
 	@echo "--> Compiling LanDnD..."
-	@$(CC) $(CFLAGS) -o landnd src/main.c src/get_ipv4.c src/get_connected_ip.c src/do_send.c src/do_recv.c
+	@$(CC) $(CFLAGS) -o landnd src/main.c src/get_ipv4.c src/get_connected_ip.c src/do_send.c src/do_recv.c src/get_ip_from_file.c src/remove_char.c
 	@echo "--> All done :)"
