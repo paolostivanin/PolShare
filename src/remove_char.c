@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include "landnd.h"
 
-void remove_char(char *str, char garbage){
+void remove_char(char *str, const char garbage){
 	char *src, *dst;
 	for(src = dst = str; *src != '\0'; src++){
 		*dst = *src;

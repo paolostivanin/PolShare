@@ -148,6 +148,7 @@ int do_recv(void){
       free(filebuffer);
    	  return -1;
     }
+    tx = 0;
     while((total_bytes_read != fsize) && ((nread = read(newsockd, filebuffer, fsize_tmp)) > 0)){
       tx += nread;
       printf("\r%d%%", (tx * 100 / fsize));
@@ -166,6 +167,7 @@ int do_recv(void){
     close(fd);
     free(filename);
     free(filebuffer);
+    printf("\n");
     counter++;
     printf("--> File received\n");
   }

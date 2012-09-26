@@ -12,5 +12,6 @@ int do_recv(void);
 int get_ipv4(void);
 int get_connected_ip(void);
 char *get_ip_from_file(char *);
-void remove_char(char *, char);
+void remove_char(char *, const char);
+void replace_space_with_vbar(char *);
 #endif

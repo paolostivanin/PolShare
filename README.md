@@ -45,15 +45,12 @@ How to use landnd
 First of all you have to start it with:<br>
 `./landnd`<br>
 then you have to choose if you want to send a file (number 1) or to receive a file (number 2).<br>
+Please note that you **MUST write the absolute path** of the files and **NOT the relative** one.<br>
 
 Extra options
 -------------
 `landnd -s` will search _(thanks to **nmap**)_ all the active hosts in your lan and it will print their IPv4.<br>
-`landnd -h` show up a simple help.
-
-Known Issue
------------
-You **DON'T HAVE TO** select a file with one or more space into the name or the program will fail.
+`landnd -h` show up a simple help **(NO YET DEVELOPED)**.
 
 License
 -------

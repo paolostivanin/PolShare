@@ -86,12 +86,13 @@ int do_send(void){
 		return -1;
 	}
 	if(*tmp_input == *is_gnome) remove_char(tmp_input, '\''); /* se il primo carattere è ' allora lo tolgo */
-	else{ is_set = 1; input_file = strdup(tmp_input); } /* altrimenti copio il tutto com'è */
+	is_set = 1; input_file = strdup(tmp_input);
+	replace_space_with_vbar(input_file);
 	token = NULL;
 	dup_input = strdup(input_file);
-	token = strtok(dup_input, " ");
+	token = strtok(dup_input, "|");
 	while(token != NULL){
-		token = strtok(NULL, " ");
+		token = strtok(NULL, "|");
 		num_of_file++;
 	}
 	free(dup_input);
@@ -105,7 +106,8 @@ int do_send(void){
 		close(sockd);
 		return -1;
 	}
-	tmp_token = strtok(input_file, " ");
+	tmp_token = strtok(input_file, "|");
+	printf("%s\n", tmp_token);
 	while(tmp_token != NULL){
 		rc = offset = 0;
 		if(stat(tmp_token, &fileStat) < 0){
@@ -178,6 +180,7 @@ int do_send(void){
 	  		close(sockd);
    			return -1;
   		}
+  		tx = 0;
 		for(size_to_send = fsize; size_to_send > 0; ){
 	    	rc = sendfile(sockd, fd, &offset, size_to_send);
     		if(rc <= 0){
@@ -195,12 +198,13 @@ int do_send(void){
     		size_to_send -= rc;
   		}
   		close(fd);
-  		tmp_token = strtok(NULL, " ");
+  		printf("\n");
+  		tmp_token = strtok(NULL, "|");
   	}
   	free(tmp_input);
  	if(is_set == 1) free(input_file);
 	free(ipv4_server);
-  	printf("--> File successfully sent\n");
+  	printf("--> File(s) successfully sent\n");
 	close(sockd);
 	return 0;
 }
