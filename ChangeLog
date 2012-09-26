@@ -21,11 +21,11 @@
 	* FIXED: now you can send file with spaces into their name
 	* IMPROVED: improved the code of get_ipv4 function
 
-xx/09/2012 - v1.0-rc
+??/09/2012 - v1.0-rc
 	* ADDED: "Yes to All" confirmation
 	* ADDED: documentation (improved readme)
 	* ADDED: configure script
 	* TEST: done stress test
 
-xx/09/2012 - v1.0.0
+??/09/2012 - v1.0.0
 	* RELEASE: newstable release is out :)
