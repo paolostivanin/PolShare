@@ -30,7 +30,8 @@ int do_recv(void){
 		return -1;
 	}
 	uint32_t fsize = 0, total_bytes_read = 0, fsize_tmp, client_counter, counter = 0;
-	int fd, sockd = -1, newsockd = -1, nread = 0;
+	int fd, sockd = -1, newsockd = -1;
+  ssize_t nread = 0, tx = 0;
 	size_t socket_len = 0;
 	void *filebuffer = NULL;
 	char *filename = NULL;
@@ -148,6 +149,8 @@ int do_recv(void){
    	  return -1;
     }
     while((total_bytes_read != fsize) && ((nread = read(newsockd, filebuffer, fsize_tmp)) > 0)){
+      tx += nread;
+      printf("\r%d%%", (tx * 100 / fsize));
    	  if(write(fd, filebuffer, nread) != nread){
    	    printf("Write error\n");
   		  close(newsockd);

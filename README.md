@@ -51,6 +51,10 @@ Extra options
 `landnd -s` will search _(thanks to **nmap**)_ all the active hosts in your lan and it will print their IPv4.<br>
 `landnd -h` show up a simple help.
 
+Known Issue
+-----------
+You **DON'T HAVE TO** select a file with one or more space into the name or the program will fail.
+
 License
 -------
 All the code is released under the license GNU AGPL v3 and above.<br>

@@ -13,13 +13,14 @@
 	* ADDED: custom entry for static ip
 	* ADDED: send multiple files
 
-18/09/2012 - v1.0-beta1
-	* FIXED: bugs, if any
+26/09/2012 - v1.0-beta1
+	* ADDED: percentage when sending or receiving files
+	* FIXED: interger overflow bug
+
+xx/09/2012 - v1.0-rc
 	* ADDED: documentation (improved readme)
 	* ADDED: configure script
-
-21/09/2012 - v1.0-rc
 	* TEST: done stress test
 
-22/09/2012 - v1.0.0
+xx/09/2012 - v1.0.0
 	* RELEASE: newstable release is out :)

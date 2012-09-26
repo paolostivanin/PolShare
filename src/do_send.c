@@ -28,7 +28,7 @@ int do_send(void){
 	int fd, sockd = -1, is_set = 0;
 	uint32_t fsize = 0, size_to_send = 0, num_of_file = 0;
 	off_t offset = 0;
-	ssize_t rc;
+	ssize_t rc, tx = 0;
 	static char buffer[2], tmp_buf[BUFSIZ];
 	char *ipv4_server = NULL, *tmp_input = NULL, *input_file = NULL, *dup_input = NULL;
 	char *token = NULL, *tmp_token = NULL, *file = NULL, *is_gnome = "'";
@@ -189,6 +189,9 @@ int do_send(void){
       			close(sockd);
       			return -1;
     		}
+    	    tx += rc;
+   			printf("\r%d%%", (tx * 100 / fsize));
+    		fflush(NULL);
     		size_to_send -= rc;
   		}
   		close(fd);
