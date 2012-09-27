@@ -1,31 +1,30 @@
 LanDnD
 ========
-LanDnD is a simple utility that allow you to share files with PCs that are in your LAN.<br>
-You could type the path of the file or you can drag 'n drop it into the terminal.<br>
+LanDnD is a simple utility that allow you to share files with PCs that are in your LAN. _(and not only)_<br>
+You can choose if you want to type the relative path, the absolute path or (if you want) you can drag & drop the file(s) into the terminal.<br>
 LanDnD is developed by:
 
 * Paolo Stivanin a.k.a. Polslinux
 
 
-Version (no stable version at the moment)
------------------------------------------
-The **last and stable** version is the **XXX** and you can download it from: https://github.com/polslinux/LanDND/zipball/XXX<br>
+Version
+-------
+The **last and stable** version is the **v1.0-beta3** and you can download it from: https://github.com/polslinux/LanDND/zipball/v1.0-beta3<br>
 If you want to use the *dev release* you have to do the following things:<br>
 
 - `git clone https://github.com/polslinux/LanDND.git`<br>
 - `cd LanDND`<br>
-- `git checkout experimental`<br>
 
 and then follow the instructions that are in *Compiling (from number 3)*.
 
 Requirements
 ------------
 
-* GCC or Clang	_(if you use Clang you **must use** a version **>= 3.1**)_
+* GCC or Clang --> _(if you use Clang you **must use** a version **>= 3.1**)_
 * Make
-* GNU/Linux		_(LanDND may works under Mac OSX but it **won't works** under MS Windows)_
-* Build Tools	_(Autoconf and Automake)_
-* Nmap			_(if you want to use the '-s' option)_
+* GNU/Linux -----> _(LanDND **may** works under Mac OSX but it **won't works** under MS Windows)_
+* Build Tools ---> _(Autoconf and Automake)_
+* Nmap ----------> _(if you want to use the '-s' option)_
 
 Compiling (incomplete. Just type make on the project root)
 ----------------------------------------------------------------
@@ -41,16 +40,18 @@ When the script finished you will find `landnd` into the project root directory.
 
 How to use landnd
 -----------------
-`landnd` is simple to use.<br>
-First of all you have to start it with:<br>
-`./landnd`<br>
-then you have to choose if you want to send a file (number 1) or to receive a file (number 2).<br>
-Please note that you **MUST write the absolute path** of the files and **NOT the relative** one.<br>
+`landnd` has two startup modes: client mode (1) or server mode (2).<br>
+`landnd 1` allow you to send files<br>
+`landnd 2` allow you to receive files.<br>
+You can use both relative and absolute path when you are writing or dragging & dropping your input files BUT if you want to use the **relative path** you **MUST** have to prefix the relative path name or the file name with a **@**  _(e.g. @Documents/file or @file)_
 
 Extra options
 -------------
-`landnd -s` will search _(thanks to **nmap**)_ all the active hosts in your lan and it will print their IPv4.<br>
-`landnd -h` show up a simple help **(NO YET DEVELOPED)**.
+`landnd -s` search to all the active hosts into your LAN and print their IPv4 _(thanks to **nmap**)_<br>
+`landnd -ya` start landnd **server (2)** with "yes to all confirmation" so you don't have to write Y to all the incoming files.
+`landnd -sya` the above options merged into one<br>
+`landnd -v` show the version info and the developer info<br>
+`landnd -h` show up a simple help<br>
 
 License
 -------

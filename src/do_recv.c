@@ -24,7 +24,7 @@
 #include <fcntl.h>
 #include "landnd.h"
 
-int do_recv(void){
+int do_recv(const int is_ya_set){
 	if(get_ipv4() < 0){
 		printf("ERROR on getting IPv4 address, exiting...\n");
 		return -1;
@@ -101,14 +101,29 @@ int do_recv(void){
    	  free(filename);
    	  return -1;
     }
+    
+    if(is_ya_set == 1){
+      strcpy(yORn, "Y");
+      goto auto_accept;
+    }
+
     printf("Do you want to receive the file '%s' which size is '%zu' bytes? (Y or N)\n", filename, fsize);
-    if(scanf("%s", yORn) == EOF){
+    another_yorn:
+    if(scanf("%1s", yORn) == EOF){
       printf("Scanf error\n");
       close(newsockd);
       close(sockd);
       free(filename);
     }
     yORn[0] = toupper(yORn[0]);
+    if(strcmp(yORn, "Y") != 0){
+      if(strcmp(yORn, "N") != 0){
+        printf("You have to write Y or N, try again: ");
+        memset(yORn, 0, sizeof(yORn));
+        goto another_yorn;
+      }
+    }
+    auto_accept:
     if(strcmp(yORn, "N") == 0){
       printf("Transfer aborted\n");
       if(send(newsockd, yORn, 2, 0) < 0){
@@ -123,7 +138,6 @@ int do_recv(void){
       return -2;
     }
     else{
-      strcpy(yORn, "Y");
       if(send(newsockd, yORn, 2, 0) < 0){
         printf("Error on sending Y\n");
         close(newsockd);

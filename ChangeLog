@@ -21,9 +21,12 @@
 	* FIXED: now you can send file with spaces into their name
 	* IMPROVED: improved the code of get_ipv4 function
 
-??/09/2012 - v1.0-rc
+27/09/2012 - v1.0-beta3
+	* ADDED: now you can send files with relative path, absolute path or both of them :)
 	* ADDED: "Yes to All" confirmation
-	* ADDED: documentation (improved readme)
+	* IMPROVED: readme file
+
+??/09/2012 - v1.0-rc
 	* ADDED: configure script
 	* TEST: done stress test
 

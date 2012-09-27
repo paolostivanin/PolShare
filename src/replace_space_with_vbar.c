@@ -1,4 +1,4 @@
-	/* Descrizione: Share your files with PCs that are in your LAN
+/* Descrizione: Share your files with PCs that are in your LAN
  * Sviluppatore: Paolo Stivanin
  * Copyright: 2012
  * Licenza: GNU AGPL v3 <http://www.gnu.org/licenses/agpl-3.0.html>
@@ -17,7 +17,7 @@ void replace_space_with_vbar(char *str){
 	for(src = dst = str; *src != '\0'; src++){
 		*dst = *src;
 		if(*dst == ' '){ /* Se trovo uno spazio... */
-			if( *(++dst) == '/'){ /* ...e il prossimo carattere è uno... / */
+			if( *(++dst) == '/' || *dst == '@'){ /* ...e il prossimo carattere è uno... / */
 				*(--dst) = '|'; /* ...allora sostituisco lo spazio con | */
 			}
 			else --dst; /* ...altrimenti torno indietro. Se non torno indietro il programma è "troppo avanti" a causa

@@ -110,6 +110,7 @@ int do_send(void){
 	printf("%s\n", tmp_token);
 	while(tmp_token != NULL){
 		rc = offset = 0;
+		if(*tmp_token == '@') remove_char(tmp_token, '@');
 		if(stat(tmp_token, &fileStat) < 0){
 			printf("stat ERROR, exiting...\n");
 			if(is_set == 1) free(input_file);
