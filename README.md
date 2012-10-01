@@ -48,7 +48,7 @@ You can use both relative and absolute path when you are writing or dragging & d
 Extra options
 -------------
 `landnd -s` search to all the active hosts into your LAN and print their IPv4 _(thanks to **nmap**)_<br>
-`landnd -ya` start landnd **server (2)** with "yes to all confirmation" so you don't have to write Y to all the incoming files.
+`landnd -ya` start landnd **server (2)** with "yes to all confirmation" so you don't have to write Y to all the incoming files.<br>
 `landnd -sya` the above options merged into one<br>
 `landnd -v` show the version info and the developer info<br>
 `landnd -h` show up a simple help<br>
