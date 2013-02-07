@@ -17,6 +17,12 @@ If you want to use the *dev release* you have to do the following things:<br>
 
 and then follow the instructions that are in *Compiling (from number 3)*.
 
+RoadMap
+-------
+Version 2.0:
+* will add the possibility to encrypt the file before send it;
+* will add a secure transfer channel thanks to libSSH2;
+
 Requirements
 ------------
 

@@ -33,5 +33,6 @@
 02/10/2012 - v1.0.0
 	* RELEASE: newstable release is out :)
 
-??/??/???? - v1.1.0
-	* ???
+??/??/2013 - v2.0
+	* ADDED: possibility to encrypt the file before send it
+	* ADDED: secure transfer (thanks to libSSH2)
