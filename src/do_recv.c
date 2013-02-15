@@ -178,6 +178,9 @@ int do_recv(const int is_ya_set){
    	  total_bytes_read += nread;
    	  fsize_tmp -= nread;
     }
+    char *file_md5 = check_md5(filename);
+    //qua ricevo md5 e invio risposta
+    free(file_md5);
     close(fd);
     free(filename);
     free(filebuffer);

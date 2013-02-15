@@ -181,6 +181,7 @@ int do_send(void){
 	  		close(sockd);
    			return -1;
   		}
+
   		tx = 0;
 		for(size_to_send = fsize; size_to_send > 0; ){
 	    	rc = sendfile(sockd, fd, &offset, size_to_send);
@@ -198,6 +199,9 @@ int do_send(void){
     		fflush(NULL);
     		size_to_send -= rc;
   		}
+  		char *file_md5 = check_md5(tmp_token);
+  		//qua invio md5 e mi metto in ascolto
+  		free(file_md5);
   		close(fd);
   		printf("\n");
   		tmp_token = strtok(NULL, "|");
