@@ -11,6 +11,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <inttypes.h>
 #include <sys/types.h>
 #include <ctype.h>
 #include <unistd.h>
@@ -35,7 +36,7 @@ int do_recv(const int is_ya_set){
 	size_t socket_len = 0;
 	void *filebuffer = NULL;
 	char *filename = NULL;
-  static char yORn[2];
+  static char yORn[2], hash[33];
 	static struct sockaddr_in local_server_addr, cli_addr;
 	/* Info sul server locale */
 	local_server_addr.sin_family = AF_INET;
@@ -58,8 +59,8 @@ int do_recv(const int is_ya_set){
 		close(sockd);
 		return -1;
 	}
-	socket_len = sizeof(cli_addr);
-
+	
+  socket_len = sizeof(cli_addr);
 	if((newsockd = accept(sockd, (struct sockaddr *) &cli_addr, (socklen_t *) &socket_len)) < 0){
     perror("Connection error (accept)\n");
     close(sockd);
@@ -107,7 +108,7 @@ int do_recv(const int is_ya_set){
       goto auto_accept;
     }
 
-    printf("Do you want to receive the file '%s' which size is '%zu' bytes? (Y or N)\n", filename, fsize);
+    printf("Do you want to receive the file '%s' which size is '%"PRIu32"' bytes? (Y or N)\n", filename, fsize);
     another_yorn:
     if(scanf("%1s", yORn) == EOF){
       printf("Scanf error\n");
@@ -165,7 +166,7 @@ int do_recv(const int is_ya_set){
     tx = 0;
     while((total_bytes_read != fsize) && ((nread = read(newsockd, filebuffer, fsize_tmp)) > 0)){
       tx += nread;
-      printf("\r%d%%", (tx * 100 / fsize));
+      printf("\r%zd%%", (tx * 100 / fsize));
    	  if(write(fd, filebuffer, nread) != nread){
    	    printf("Write error\n");
   		  close(newsockd);
@@ -179,14 +180,49 @@ int do_recv(const int is_ya_set){
    	  fsize_tmp -= nread;
     }
     char *file_md5 = check_md5(filename);
-    //qua ricevo md5 e invio risposta
+    if(recv(newsockd, hash, 33, 0) < 0){
+      printf("Error on receiving file md5\n");
+      close(newsockd);
+      close(sockd);
+      close(fd);
+      free(filename);
+      free(file_md5);
+      return -1;
+    }
+    if(strcmp(file_md5, hash) == 0){
+      memset(yORn, 0, sizeof(yORn));
+      strcpy(yORn, "Y");
+      if(send(newsockd, yORn, 2, 0) < 0){
+        close(newsockd);
+        close(sockd);
+        close(fd);
+        free(filename);
+        free(file_md5);
+        return -1;
+      }
+      printf("\n--> md5sum matches\n");
+      printf("--> File successfully transferred\n");
+    }
+    else{
+      memset(yORn, 0, sizeof(yORn));
+      strcpy(yORn, "N");
+      if(send(newsockd, yORn, 2, 0) < 0){
+        close(newsockd);
+        close(sockd);
+        close(fd);
+        free(filename);
+        free(file_md5);
+        return -1;
+      }
+      printf("--> md5sum NOT matches\n");
+      printf("\n--> File transfer FAILED\n");
+    }
     free(file_md5);
     close(fd);
     free(filename);
     free(filebuffer);
-    printf("\n");
+    //printf("\n");
     counter++;
-    printf("--> File received\n");
   }
   close(newsockd);
   close(sockd);

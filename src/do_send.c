@@ -11,6 +11,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <inttypes.h>
 #include <sys/types.h>
 #include <unistd.h>
 #include <sys/stat.h>
@@ -29,7 +30,7 @@ int do_send(void){
 	uint32_t fsize = 0, size_to_send = 0, num_of_file = 0;
 	off_t offset = 0;
 	ssize_t rc, tx = 0;
-	static char buffer[2], tmp_buf[BUFSIZ];
+	static char buffer[2], hash[33], tmp_buf[BUFSIZ];
 	char *ipv4_server = NULL, *tmp_input = NULL, *input_file = NULL, *dup_input = NULL;
 	char *token = NULL, *tmp_token = NULL, *file = NULL, *is_gnome = "'";
 	static struct sockaddr_in remote_server_addr;
@@ -195,21 +196,47 @@ int do_send(void){
       			return -1;
     		}
     	    tx += rc;
-   			printf("\r%d%%", (tx * 100 / fsize));
+   			printf("\r%zd%%", (tx * 100 / fsize));
     		fflush(NULL);
     		size_to_send -= rc;
   		}
+  		memset(buffer, 0, sizeof(buffer));
   		char *file_md5 = check_md5(tmp_token);
-  		//qua invio md5 e mi metto in ascolto
+  		strcpy(hash, file_md5);
+  		if(send(sockd, hash, 33, 0) < 0){
+			printf("Error on sending file hash\n");
+    		free(ipv4_server);
+    		if(is_set == 1) free(input_file);
+    		free(tmp_input);
+    		free(file_md5);	
+			close(sockd);
+			return -1;
+		}
+  		if(recv(sockd, buffer, 2, 0) < 0){
+			printf("Error on receiving file hash confirmation\n");
+    		free(ipv4_server);
+    		if(is_set == 1) free(input_file);
+    		free(tmp_input);
+    		free(file_md5);	
+			close(sockd);
+			return -1;
+		}
+		if(strcmp(buffer, "Y") == 0){
+			printf("\n--> md5sum matches\n");
+			printf("--> File successfully transferred\n");
+		}
+		else{
+			printf("\n--> md5sum NOT matches\n");
+			printf("--> File transfer FAILED\n");
+		}
   		free(file_md5);
   		close(fd);
-  		printf("\n");
+  		//printf("\n");
   		tmp_token = strtok(NULL, "|");
   	}
   	free(tmp_input);
  	if(is_set == 1) free(input_file);
 	free(ipv4_server);
-  	printf("--> File(s) successfully sent\n");
 	close(sockd);
 	return 0;
 }

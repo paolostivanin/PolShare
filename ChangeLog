@@ -35,6 +35,9 @@
 
 ??/02/2013 - v1.1.0
 	* ADDED: md5sum check for each transferred file
+	* IMPROVED: send file when using the relative path no longer required @
+	* IMPROVED: error handling and reporting
+	* IMPROVED: usability (simpler argv options, server ip must be given as argv parameter)
 
 ??/??/2013 - v2.0
 	* ADDED: possibility to encrypt the file before send it
