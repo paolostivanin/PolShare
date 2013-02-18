@@ -49,7 +49,7 @@ How to use landnd
 `landnd` has two startup modes: client mode (1) or server mode (2).<br>
 `landnd 1` allow you to send files<br>
 `landnd 2` allow you to receive files.<br>
-You can use both relative and absolute path when you are writing or dragging & dropping your input files BUT if you want to use the **relative path** you **MUST** have to prefix the relative path name or the file name with a **@**  _(e.g. @Documents/file or @file)_
+**NO LONGER NEEDED** You can use both relative and absolute path when you are writing or dragging & dropping your input files BUT if you want to use the **relative path** you **MUST** have to prefix the relative path name or the file name with a **@**  _(e.g. @Documents/file or @file)_
 
 Extra options
 -------------
