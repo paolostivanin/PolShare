@@ -1,10 +1,3 @@
-/* Descrizione: Share your files with PCs that are in your LAN
- * Sviluppatore: Paolo Stivanin
- * Copyright: 2012
- * Licenza: GNU AGPL v3 <http://www.gnu.org/licenses/agpl-3.0.html>
- * Sito web: <https://github.com/polslinux/LanDND>
- */
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

@@ -7,10 +7,10 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#define GCRYPT_VERSION "1.5.0"
+#define GCRYPT_VER "1.5.0"
 
 char *check_md5(char *filename){
-	if(!gcry_check_version(GCRYPT_VERSION)){
+	if(!gcry_check_version(GCRYPT_VER)){
 		fputs("libgcrypt version mismatch\n", stderr);
 		exit(2);
 	}

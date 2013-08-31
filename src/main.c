@@ -1,13 +1,4 @@
-/* Descrizione: Share your files with PCs that are in your LAN
- * Sviluppatore: Paolo Stivanin
- * Versione: 1.1-exp
- * Copyright: 2012
- * Licenza: GNU AGPL v3 <http://www.gnu.org/licenses/agpl-3.0.html>
- * Sito web: <https://github.com/polslinux/LanDND>
- */
-
 #define _GNU_SOURCE
-#define VERSION "1.0-beta3"
 
 #include <stdio.h>
 #include <string.h>
@@ -20,6 +11,14 @@ int main(int argc, char **argv){
 		printf("Usage: %s <number> [-s] OR [-ya] OR [-sya] OR [-v] OR [-h]\n", argv[0]);
 		return EXIT_FAILURE;
 	}
+
+	if(argc == 2){
+		if(strcmp(argv[1], "-v") == 0){
+  			printf("LanDND v%s developed by Paolo Stivanin <http://www.polslinux.it>\n", VERSION);
+    		return EXIT_SUCCESS;
+  		}
+  	}
+	
 	if(atoi(argv[1]) != 1){
 		if(atoi(argv[1]) != 2){
 			printf("Error: the <number> MUST be 1 (send) or 2 (receive)\n");
@@ -44,13 +43,6 @@ int main(int argc, char **argv){
 	if(argc == 3){
 		if(strcmp(argv[2], "-ya") == 0) is_ya = 1;
 	}
-
-	if(argc == 3){
-		if(strcmp(argv[2], "-v") == 0){
-  			printf("LanDND v%s developed by Paolo Stivanin <http://www.polslinux.it>\n", VERSION);
-    		return EXIT_SUCCESS;
-  		}
-  	}
 
   	if(argc == 3){
   		if(strcmp(argv[2], "-h") == 0){
