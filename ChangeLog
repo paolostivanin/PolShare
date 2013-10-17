@@ -38,6 +38,7 @@
 	* IMPROVED: relative path cannot be used due to security reason
 	* IMPROVED: error handling and reporting
 	* IMPROVED: usability (simpler argv options, server ip must be given as argv parameter)
+	* IMPROVED: check if given IP is real or not
 
 ??/??/2014 - v1.2.0
 	* ADDED: possibility to encrypt the file before send it

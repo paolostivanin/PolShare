@@ -3,74 +3,84 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
+#include <getopt.h>
+#include <unistd.h>
 #include "landnd.h"
 
 int main(int argc, char **argv){
-
-	if(argc > 3 || argc < 2){
-		printf("Usage: %s <number> [-s] OR [-ya] OR [-sya] OR [-v] OR [-h]\n", argv[0]);
-		return EXIT_FAILURE;
+	static struct option long_options[] = {
+		{"help", no_argument, NULL, 'h'},
+		{"version", no_argument, NULL, 'v'},
+		{"send", required_argument, NULL, 's'},
+		{"recv", required_argument, NULL, 'r'},
+		{"list-ip", required_argument, NULL, 'i'},
+		{NULL, 0, NULL, 0}
+	};
+	int ch;
+	while ((ch = getopt_long(argc, argv, "v", long_options, NULL)) != -1){
+			switch(ch){
+			case 'v':
+				printf("lanDND v%s developed by Paolo Stivanin <info@paolostivanin.com>\n", VERSION);
+				return 0;
+			
+			case 'h':
+				printf("Available options are:\n");
+				printf("--send <ip>\t::= to send a file to the specified ip address\n");
+				printf("--recv [y|n]\t::= to auto accept all incoming files OR to confirm every file before download\n");
+				printf("--list-ip <ip>\t::= list all the ip addresses that are connected to your lan\n");
+				printf("--version\t::= display version and developer info\n");
+				printf("--help\t\t::= display this simple help :)\n");
+				return 0;
+			
+			case '?':
+				return -1;
+			}
 	}
+	optind = 1;
+	while ((ch = getopt_long(argc, argv, "s:r:i:", long_options, NULL)) != -1){
+		switch (ch){
+			case 's':
+				do_action(1, optarg);
+				return 0;
 
-	if(argc == 2){
-		if(strcmp(argv[1], "-v") == 0){
-  			printf("LanDND v%s developed by Paolo Stivanin <http://www.polslinux.it>\n", VERSION);
-    		return EXIT_SUCCESS;
-  		}
-  	}
-	
-	if(atoi(argv[1]) != 1){
-		if(atoi(argv[1]) != 2){
-			printf("Error: the <number> MUST be 1 (send) or 2 (receive)\n");
-			return EXIT_FAILURE;
+			case 'r':
+				do_action(2, optarg);
+				return 0;
+			
+			case 'i':
+				do_action(3, optarg);
 		}
 	}
+	return 0;
+}
 
-  	int ret_val = -1, choice = atoi(argv[1]), is_ya = 0;
-
-  	if(argc == 3){
-		if((strcmp(argv[2], "-s") == 0) || (strcmp(argv[2], "-sya") == 0)){
-			printf("IPv4 that are connected in your LAN:\n");
-  			ret_val = get_connected_ip();
-  			if(ret_val < 0){
-   				printf("Error during lan scan. You have to manually search to the active hosts into your LAN\n");
-  			}
-  			printf("\n");
-  			if(strcmp(argv[2], "-sya") == 0) is_ya = 1;
-		}
-	}
-
-	if(argc == 3){
-		if(strcmp(argv[2], "-ya") == 0) is_ya = 1;
-	}
-
-  	if(argc == 3){
-  		if(strcmp(argv[2], "-h") == 0){
-  			printf("--> HELP:\n");
-  			printf("-s\t-> search to all the active hosts into your LAN and print their IPv4\n");
-  			printf("-ya\t-> auto accept all the files you're going to receive\n");
-  			printf("-sya\t-> -s option merged with -ya option so you could use\n\t   both of them in one time\n");
-  			printf("-v\t-> display version info and developer info\n");
-  			printf("-h\t-> display this simple help :)\n");
-    		return EXIT_SUCCESS;
-  		}
-  	}
-
-	if(choice == 1){
-		ret_val = do_send();
+int do_action(int req, const char *opt){
+	int ret_val = -1;
+	if(req == 1){
+		ret_val = do_send(opt);
 		if(ret_val < 0){
-			if(ret_val == -2) return EXIT_SUCCESS;
+			if(ret_val == -2) return 0;
 			printf("Something went wrong, exiting...\n");
-			return EXIT_FAILURE;
+			return -1;
 		}
 	}
-	else{
-		ret_val = do_recv(is_ya);
+	else if(req == 2){
+		ret_val = do_recv(opt);
 		if(ret_val < 0){
-			if(ret_val == -2) return EXIT_SUCCESS;
+			if(ret_val == -2) return 0;
 			printf("Something went wrong, exiting...\n");
-			return EXIT_FAILURE;
+			return -1;
 		}
 	}
-	return EXIT_SUCCESS;
+	else if(req == 3){
+		printf("IPv4 that are connected in your LAN:\n");
+		ret_val = get_connected_ip(opt);
+  		if(ret_val < 0){
+   			printf("Error during lan scan. You have to manually search to the active hosts into your LAN\n");
+   			return -1;
+  		}
+  		printf("\n");
+	}
+	return 0;
 }

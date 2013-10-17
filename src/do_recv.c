@@ -18,18 +18,18 @@
 #include <fcntl.h>
 #include "landnd.h"
 
-int do_recv(const int is_ya_set){
+int do_recv(const char *acceptOrNot){
 	if(get_ipv4() < 0){
 		printf("ERROR on getting IPv4 address, exiting...\n");
 		return -1;
 	}
 	uint32_t fsize = 0, total_bytes_read = 0, fsize_tmp, client_counter, counter = 0;
 	int fd, sockd = -1, newsockd = -1;
-  ssize_t nread = 0, tx = 0;
+	ssize_t nread = 0, tx = 0;
 	size_t socket_len = 0;
 	void *filebuffer = NULL;
 	char *filename = NULL;
-  static char yORn[2], hash[33];
+	static char yORn[2], hash[33];
 	static struct sockaddr_in local_server_addr, cli_addr;
 	/* Info sul server locale */
 	local_server_addr.sin_family = AF_INET;
@@ -96,7 +96,7 @@ int do_recv(const int is_ya_set){
    	  return -1;
     }
     
-    if(is_ya_set == 1){
+    if(strcmp(acceptOrNot, "y") == 0){
       strcpy(yORn, "Y");
       goto auto_accept;
     }
