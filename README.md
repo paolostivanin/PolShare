@@ -9,7 +9,7 @@ LanDnD is developed by:
 
 Version
 -------
-The **last and stable** version is the **v1.0.0** and you can download it from: https://github.com/polslinux/LanDND/zipball/v1.0.0<br>
+The **last stable** version is the **v1.0.0** and you can download it from: https://github.com/polslinux/LanDND/zipball/v1.0.0<br>
 If you want to use the *dev release* you have to do the following things:<br>
 
 - `git clone https://github.com/polslinux/LanDND.git`<br>
@@ -20,19 +20,18 @@ and then follow the instructions that are in *Compiling (from number 3)*.
 RoadMap
 -------
 ??/??/2013 - v1.1.0
-* ADDED: md5sum check for each transferred file
+* ADDED: md5sum check for each transferred file [✓]
 * IMPROVED: relative path cannot be used due to security reason
-* IMPROVED: error handling and reporting
-* IMPROVED: usability (simpler argv options, server ip must be given as argv parameter)
+* IMPROVED: better error handling and reporting
+* IMPROVED: usability (simpler argv options, server ip must be given as argv parameter) [✓]
 
 Requirements
 ------------
 
 * GCC or Clang --> _(if you use Clang you **must use** a version **>= 3.1**)_
-* Make
+* make
 * GNU/Linux -----> _(LanDND **may** works under Mac OSX but it **won't works** under MS Windows)_
-* Build Tools ---> _(Autoconf and Automake)_
-* Nmap ----------> _(if you want to use the '-s' option)_
+* nmap ----------> _(if you want to use the '--list-ip' option)_
 
 Compiling
 ----------------------------------------------------------------
@@ -48,17 +47,14 @@ When the script finished you will find the `landnd` ELF into the project root di
 
 How to use landnd
 -----------------
-`landnd` has two startup modes: client mode (1) or server mode (2).<br>
-`landnd 1` allow you to send files<br>
-`landnd 2` allow you to receive files.<br>
+`landnd --send <ip>` to send a file to the given ip<br>
+`landnd --recv [y|n]` to receive files. **y** if you want to auto accept all the incoming files or **n** if you want to confirm every file before download it.<br>
 
 Extra options
 -------------
-`landnd -s` search to all the active hosts into your LAN and print their IPv4 _(thanks to **nmap**)_<br>
-`landnd -ya` start landnd **server (2)** with "yes to all confirmation" so you don't have to write Y to all the incoming files.<br>
-`landnd -sya` the above options merged into one<br>
-`landnd -v` show the version info and the developer info<br>
-`landnd -h` show up a simple help<br>
+`landnd --list-ip <ip>` list all the ip connected to your lan<br>
+`landnd --version` show the version info and the developer info<br>
+`landnd --help` show up a simple help<br>
 
 License
 -------
@@ -67,5 +63,5 @@ All the code is released under the license GNU AGPL v3 and above.<br>
 
 Web Site
 --------
-Developer web site:	<http://www.polslinux.it><br>
+Developer web site:	<http://www.paolostivanin.com><br>
 Project web site:	<https://github.com/polslinux/LanDND>
