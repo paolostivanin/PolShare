@@ -56,7 +56,17 @@ int main(int argc, char **argv){
 }
 
 int do_action(int req, const char *opt){
-	int ret_val = -1;
+	int i, ret_val = -1;
+	if(strlen(opt) < 7 || strlen(opt) > 15){
+		printf("Error: ip address too short or long\n");
+		return -1;
+	}
+	for(i>=0; i<strlen(opt); i++){
+		if(!(isdigit(opt[i])) && opt[i] != '.'){
+			printf("Bad ip address\n");
+			return -1;
+		}
+	}
 	if(req == 1){
 		ret_val = do_send(opt);
 		if(ret_val < 0){
