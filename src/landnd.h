@@ -1,7 +1,7 @@
 #ifndef LANDND_H_INCLUDED
 #define LANDND_H_INCLUDED
 
-#define VERSION "1.1.0"
+#define VERSION "1.1.1"
 
 int do_send(const char *);
 int do_recv(const char *);

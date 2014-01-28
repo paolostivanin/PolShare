@@ -9,7 +9,7 @@ LanDnD is developed by:
 
 Version
 -------
-The **last stable** version is the **v1.1.0** and you can find it in the master branch.<br>
+The **last stable** version is the **v1.1.1** and you can find it in the master branch.<br>
 If you want to use the *dev release* you have to do the following things:<br>
 
 - `git clone https://github.com/polslinux/LanDND.git`<br>
