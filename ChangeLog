@@ -33,7 +33,7 @@
 02/10/2012 - v1.0.0
 	* RELEASE: newstable release is out :)
 
-28/01/2014 - v1.1.0
+28/01/2014 - v1.1.0/v1.1.1
 	* ADDED: md5sum check for each transferred file
 	* IMPROVED: relative path cannot be used due to security reason
 	* IMPROVED: error handling and reporting
