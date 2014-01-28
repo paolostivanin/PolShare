@@ -76,7 +76,35 @@ int do_send(const char *ip){
 	printf("%s\n", tmp_token);
 	while(tmp_token != NULL){
 		rc = offset = 0;
-		if(*tmp_token == '@') remove_char(tmp_token, '@');
+		if(tmp_token[0] == '.' && tmp_token[1] == '.'){
+			printf("You cannot use relative path\n");
+			free(tmp_input);
+			free(input_file);
+			close(sockd);
+			return -1;
+		}
+		if(strlen(tmp_token) > 5){
+			char *start = NULL;
+			start = malloc(6);
+			if(start == NULL){
+				printf("memory allocation error\n");
+				free(tmp_input);
+				free(input_file);
+				close(sockd);
+				return -1;
+			}
+			memcpy(start, tmp_token, 5);
+			start[6] = '\0';
+			if(strcmp(start, "/home") != 0){
+				printf("You cannot send file from outside home directory\n");
+				free(tmp_input);
+				free(start);
+				free(input_file);
+				close(sockd);
+				return -1;
+			}
+			free(start);
+		}
 		if(stat(tmp_token, &fileStat) < 0){
 			printf("stat ERROR, exiting...\n");
 			if(is_set == 1) free(input_file);

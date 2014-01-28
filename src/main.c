@@ -56,7 +56,7 @@ int main(int argc, char **argv){
 }
 
 int do_action(int req, const char *opt){
-	int count=0, ret_val = -1;
+	int retVal = -1, count = 0;
 	unsigned int i;
 	if(req == 1){
 		if(strlen(opt) < 7 || strlen(opt) > 15){
@@ -74,20 +74,10 @@ int do_action(int req, const char *opt){
 			printf("Bad ip address\n");
 			return -1;
 		}
-		ret_val = do_send(opt);
-		if(ret_val < 0){
-			if(ret_val == -2) return 0;
-			printf("Something went wrong, exiting...\n");
-			return -1;
-		}
+		do_send(opt);
 	}
 	else if(req == 2){
-		ret_val = do_recv(opt);
-		if(ret_val < 0){
-			if(ret_val == -2) return 0;
-			printf("Something went wrong, exiting...\n");
-			return -1;
-		}
+		do_recv(opt);
 	}
 	else if(req == 3){
 		count=0;
@@ -107,8 +97,8 @@ int do_action(int req, const char *opt){
 			return -1;
 		}
 		printf("IPv4 that are connected in your LAN:\n");
-		ret_val = get_connected_ip(opt);
-  		if(ret_val < 0){
+		retVal = get_connected_ip(opt);
+  		if(retVal < 0){
    			printf("Error during lan scan. You have to manually search to the active hosts into your LAN\n");
    			return -1;
   		}
