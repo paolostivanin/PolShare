@@ -9,21 +9,18 @@ LanDnD is developed by:
 
 Version
 -------
-The **last stable** version is the **v1.0.0** and you can download it from: https://github.com/polslinux/LanDND/zipball/v1.0.0<br>
+The **last stable** version is the **v1.1.0** and you can find it in the master branch.<br>
 If you want to use the *dev release* you have to do the following things:<br>
 
 - `git clone https://github.com/polslinux/LanDND.git`<br>
 - `cd LanDND`<br>
+- `git checkout experimental`<br>
 
-and then follow the instructions that are in *Compiling (from number 3)*.
+and then follow the instructions that are in *Compiling (only the last)*.
 
 RoadMap
 -------
-??/??/2013 - v1.1.0
-* ADDED: md5sum check for each transferred file [✓]
-* IMPROVED: relative path cannot be used due to security reason
-* IMPROVED: better error handling and reporting
-* IMPROVED: usability (simpler argv options, server ip must be given as argv parameter) [✓]
+<empty>
 
 Requirements
 ------------
@@ -39,16 +36,14 @@ Compiling
 `git clone https://github.com/polslinux/LanDND.git`<br>
 * move inside the directory you've just downloaded:<br>
 `cd $PWD/LanDND`<br>
-* give the right permission to autogen.sh:<br>
-`chmod 744 autogen.sh`<br>
-* and now execute the script:<br>
-`./autogen.sh`<br>
-When the script finished you will find the `landnd` ELF into the project root directory.
+* compile LanDND with:<br>
+`make`<br>
+When the compile phase finished, you will find the `landnd` ELF into the project root directory.
 
 How to use landnd
 -----------------
 `landnd --send <ip>` to send a file to the given ip<br>
-`landnd --recv [y|n]` to receive files. **y** if you want to auto accept all the incoming files or **n** if you want to confirm every file before download it.<br>
+`landnd --recv [y|n]` to receive files. **y** if you want to auto accept all the incoming files or **n** if you want to confirm every file before receive it.<br>
 
 Extra options
 -------------

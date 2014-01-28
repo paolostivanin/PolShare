@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Wno-unused-result -Wformat-security -O2 -D_FORTIFY_SOURCE=2
+CFLAGS = -Wall -Wextra -Wno-unused-result -Wformat-security -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -O2
 LDFLAGS = -lgcrypt
 
 all: landnd

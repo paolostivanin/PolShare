@@ -56,7 +56,8 @@ int main(int argc, char **argv){
 }
 
 int do_action(int req, const char *opt){
-	int i, count=0, ret_val = -1;
+	int count=0, ret_val = -1;
+	unsigned int i;
 	if(req == 1){
 		if(strlen(opt) < 7 || strlen(opt) > 15){
 			printf("Error: ip address too short or long\n");
