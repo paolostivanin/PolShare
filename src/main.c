@@ -57,6 +57,7 @@ int main(int argc, char **argv){
 
 int do_action(int req, const char *opt){
 	int retVal = -1, count = 0, ch = -1;
+	char buf[4];
 	unsigned int i;
 	if(req == 1){
 		if(strlen(opt) < 7 || strlen(opt) > 15){
@@ -76,7 +77,10 @@ int do_action(int req, const char *opt){
 		}
 		while(1){
 			printf("Write:\n1 to send a file\n2 to quit\nChoice: ");
-			scanf("%d", &ch);
+			fgets(buf, 3, stdin);
+			buf[1] = '\0';
+			if(strcmp(buf, "1") == 0) ch =1;
+			else ch = 2;
 			printf("\n");
 			switch(ch){
 				case 1:
