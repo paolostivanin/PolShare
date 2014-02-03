@@ -166,6 +166,7 @@ int do_send(const char *ip){
   	memset(buffer, 0, sizeof(buffer));
   	char *file_md5 = check_md5(tmp_input);
   	strcpy(hash, file_md5);
+  	hash[32] = '\0';
   	if(send(sockd, hash, 33, 0) < 0){
 		printf("Error on sending file hash\n");
     		free(input_file);
