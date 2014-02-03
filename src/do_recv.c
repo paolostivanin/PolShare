@@ -37,8 +37,7 @@ int do_recv(const char *acceptOrNot){
 		printf("ERROR on getting IPv4 address, exiting...\n");
 		return -1;
 	}
-	uint32_t fsize = 0, total_bytes_read = 0, fsize_tmp, client_counter, counter = 0;
-	int fd, sockd = -1, newsockd = -1;
+	uint32_t fsize = 0, total_bytes_read = 0, fsize_tmp;
 	ssize_t nread = 0, tx = 0;
 	size_t socket_len = 0;
 	void *filebuffer = NULL;
@@ -132,7 +131,7 @@ int do_recv(const char *acceptOrNot){
 	      	printf("Transfer aborted\n");
       		if(send(socketStruct.newsockd, yORn, 2, 0) < 0){
 	        	printf("Error on sending N\n");
-        		close(nsocketStruct.ewsockd);
+        		close(socketStruct.ewsockd);
         		close(socketStruct.sockd);
         		free(filename);    
 		 }
@@ -167,7 +166,7 @@ int do_recv(const char *acceptOrNot){
    	  	return -1;
     	}
     	tx = 0;
-    	while((total_bytes_read != fsize) && ((nread = read(newsockd, filebuffer, fsize_tmp)) > 0)){
+    	while((total_bytes_read != fsize) && ((nread = read(socketStruct.newsockd, filebuffer, fsize_tmp)) > 0)){
 		tx += nread;
       		printf("\r%zd%%", (tx * 100 / fsize));
    	  	if(write(fd, filebuffer, nread) != nread){
