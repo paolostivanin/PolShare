@@ -132,7 +132,7 @@ int do_recv(const char *acceptOrNot){
 	      	printf("Transfer aborted\n");
       		if(send(socketStruct.newsockd, yORn, 2, 0) < 0){
 	        	printf("Error on sending N\n");
-        		close(socketStruct.ewsockd);
+        		close(socketStruct.newsockd);
         		close(socketStruct.sockd);
         		free(filename);    
 		 }
@@ -170,7 +170,7 @@ int do_recv(const char *acceptOrNot){
     	while((total_bytes_read != fsize) && ((nread = read(socketStruct.newsockd, filebuffer, fsize_tmp)) > 0)){
 		tx += nread;
       		printf("\r%zd%%", (tx * 100 / fsize));
-   	  	if(write(fd, filebuffer, nread) != nread){
+   	  	if(write(socketStruct.fd, filebuffer, nread) != nread){
 	   	    	printf("Write error\n");
   		  	close(socketStruct.newsockd);
    	    		close(socketStruct.sockd);
@@ -244,7 +244,7 @@ void panic(const char *fmt, ...){
     	va_start(argptr, fmt);
     	vsprintf(buf, fmt, argptr);
     	va_end(argptr);
-    	fprintf(stderr, buf);
+    	fprintf(stderr, "%s\n", buf);
     	exit(-1);
 }
 
