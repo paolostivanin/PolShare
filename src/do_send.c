@@ -23,7 +23,7 @@ int do_send(const char *ip){
 	uint32_t fsize = 0, size_to_send = 0;
 	off_t offset = 0;
 	ssize_t rc, tx = 0;
-	static char buffer[2], hash[33];
+	static char buffer[2], hash[33], bufname[512];
 	char *tmp_input = NULL, *input_file = NULL;
 	char *file = NULL, *is_gnome = "'";
 	static struct sockaddr_in remote_server_addr;
@@ -47,11 +47,16 @@ int do_send(const char *ip){
   	}
 
 	printf("Drag (or write) the file to send: ");
-	if(scanf("%m[^\n]%*c", &tmp_input) == EOF){
-		printf("\nscanf ERROR, exiting...\n");
-   		close(sockd);
-		return -1;
-	}
+	fgets(bufname, 510, stdin);
+        tmp_input = malloc(strlen(bufname));
+        if(tmp_input == NULL){
+        	printf("errore malloc\n");
+        	close(sockd);
+        	return -1;
+        }
+        strncpy(tmp_input, bufname, strlen(bufname));
+        tmp_input[strlen(bufname)-1] = '\0';
+	
 	if(*tmp_input == *is_gnome) remove_char(tmp_input, '\''); /* se il primo carattere è ' allora lo tolgo */
 	input_file = strdup(tmp_input);
 
