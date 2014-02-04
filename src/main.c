@@ -3,12 +3,20 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <gcrypt.h>
 #include <ctype.h>
 #include <getopt.h>
 #include <unistd.h>
 #include "landnd.h"
 
 int main(int argc, char **argv){
+	if(!gcry_check_version(GCRYPT_VER)){
+		fputs("libgcrypt version mismatch\n", stderr);
+		return -1;
+	}
+	gcry_control(GCRYCTL_INIT_SECMEM, 16384, 0);
+	gcry_control (GCRYCTL_INITIALIZATION_FINISHED, 0);
+	
 	static struct option long_options[] = {
 		{"help", no_argument, NULL, 'h'},
 		{"version", no_argument, NULL, 'v'},
@@ -92,7 +100,10 @@ int do_action(int req, const char *opt){
 		}
 	}
 	else if(req == 2){
-		do_recv(opt);
+		printf("Type CTRL+C to exit\n");
+		while(1){
+			do_recv(opt);
+		}
 	}
 	else if(req == 3){
 		count=0;

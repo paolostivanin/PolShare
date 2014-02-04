@@ -48,14 +48,14 @@ int do_send(const char *ip){
 
 	printf("Drag (or write) the file to send: ");
 	fgets(bufname, 510, stdin);
-        tmp_input = malloc(strlen(bufname));
-        if(tmp_input == NULL){
-        	printf("errore malloc\n");
-        	close(sockd);
-        	return -1;
-        }
-        strncpy(tmp_input, bufname, strlen(bufname));
-        tmp_input[strlen(bufname)-1] = '\0';
+    tmp_input = malloc(strlen(bufname));
+    if(tmp_input == NULL){
+       	printf("errore malloc\n");
+       	close(sockd);
+       	return -1;
+    }
+    strncpy(tmp_input, bufname, strlen(bufname));
+    tmp_input[strlen(bufname)-1] = '\0';
 	
 	if(*tmp_input == *is_gnome) remove_char(tmp_input, '\''); /* se il primo carattere è ' allora lo tolgo */
 	input_file = strdup(tmp_input);
@@ -79,8 +79,9 @@ int do_send(const char *ip){
 			return -1;
 		}
 		memcpy(start, tmp_input, 5);
-		start[6] = '\0';
+		start[5] = '\0';
 		if(strcmp(start, "/home") != 0){
+			printf("%s\n", start);
 			printf("You cannot send file from outside your home directory\n");
 			free(tmp_input);
 			free(start);

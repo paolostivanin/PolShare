@@ -7,15 +7,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#define GCRYPT_VER "1.5.0"
 
 char *check_md5(char *filename){
-	if(!gcry_check_version(GCRYPT_VER)){
-		fputs("libgcrypt version mismatch\n", stderr);
-		exit(2);
-	}
-	gcry_control(GCRYCTL_INIT_SECMEM, 16384, 0);
-	gcry_control (GCRYCTL_INITIALIZATION_FINISHED, 0);
+
 	int algo, i, fd;
 	off_t donesize = 0, diff = 0, fsize = 0;
 	FILE *fp;

@@ -1,7 +1,8 @@
 #ifndef LANDND_H_INCLUDED
 #define LANDND_H_INCLUDED
 
-#define VERSION "1.1.1"
+#define VERSION "1.1.2"
+#define GCRYPT_VER "1.5.0"
 
 int do_send(const char *);
 int do_recv(const char *);
