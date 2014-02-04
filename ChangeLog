@@ -33,19 +33,21 @@
 02/10/2012 - v1.0.0
 	* RELEASE: newstable release is out :)
 
-28/01/2014 - v1.1.0/v1.1.1
+28/01/2014 - v1.1.0
 	* ADDED: md5sum check for each transferred file
 	* IMPROVED: relative path cannot be used due to security reason
 	* IMPROVED: error handling and reporting
 	* IMPROVED: usability (simpler argv options, server ip must be given as argv parameter)
 	* IMPROVED: check if given IP is real or not
 
+04/02/2014 - v1.1.2
+	* FIXED: issue #8
+	* minor improvement
+
 ??/??/2014 - v1.2.0
 	* ADDED: possibility to encrypt the file before send it
 	* ADDED: secure transfer (thanks to libSSH2)
 	
-??/??/2014 - v1.3.0
+??/??/2012 - v2.0.0
 	* ADDED: server daemon (auto accept all incoming file from certain ip [config file], etc)
-	
-??/??/2012 - v1.4.0
 	* ADDED: GTK+ v3 gui
