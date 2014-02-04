@@ -56,7 +56,8 @@ int main(int argc, char **argv){
 }
 
 int do_action(int req, const char *opt){
-	int retVal = -1, count = 0;
+	int retVal = -1, count = 0, ch = -1;
+	char buf[4];
 	unsigned int i;
 	if(req == 1){
 		if(strlen(opt) < 7 || strlen(opt) > 15){
@@ -74,7 +75,21 @@ int do_action(int req, const char *opt){
 			printf("Bad ip address\n");
 			return -1;
 		}
-		do_send(opt);
+		while(1){
+			printf("Write:\n1 to send a file\n2 to quit\nChoice: ");
+			fgets(buf, 3, stdin);
+			buf[1] = '\0';
+			if(strcmp(buf, "1") == 0) ch =1;
+			else ch = 2;
+			printf("\n");
+			switch(ch){
+				case 1:
+					do_send(opt);
+					break;
+				case 2:
+					return 0;
+			}
+		}
 	}
 	else if(req == 2){
 		do_recv(opt);
