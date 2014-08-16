@@ -15,26 +15,27 @@
 #include <netdb.h>
 #include <sys/sendfile.h>
 #include <fcntl.h>
-#include "landnd.h"
+#include "polshare.h"
 
-int do_send(const char *ip){
-	struct stat fileStat;
+int
+do_send (const char *ip)
+{
+	struct stat file_stat;
 	int fd, sockd = -1;
-	uint32_t fsize = 0, size_to_send = 0;
+	unsigned int file_size = 0, size_to_send = 0;
 	off_t offset = 0;
 	ssize_t rc, tx = 0;
-	static char buffer[2], hash[33], bufname[512];
+	char buffer[2], hash[33], bufname[512];
 	char *tmp_input = NULL, *input_file = NULL;
-	char *file = NULL, *is_gnome = "'";
-	static struct sockaddr_in remote_server_addr;
-	static struct hostent *hp;
+	char *file = NULL;
+	const char *is_gnome = "'";
+	struct sockaddr_in remote_server_addr;
 	
 	/* Info sul server remoto */
-	hp = gethostbyname(ip);
 	remote_server_addr.sin_family = AF_INET;
 	remote_server_addr.sin_port = 15000;
-	remote_server_addr.sin_addr.s_addr = ((struct in_addr*)(hp->h_addr)) -> s_addr;
-
+	inet_pton(AF_INET, ip, &(remote_server_addr.sin_addr));
+	
 	if((sockd = socket(AF_INET, SOCK_STREAM, 0)) < 0){
 		printf("Error during socket creation\n");
 		return -1;
@@ -91,7 +92,7 @@ int do_send(const char *ip){
 		}
 		free(start);
 	}
-	if(stat(tmp_input, &fileStat) < 0){
+	if(stat(tmp_input, &file_stat) < 0){
 		printf("stat ERROR, exiting...\n");
 		free(input_file);
 		free(tmp_input);
@@ -99,7 +100,7 @@ int do_send(const char *ip){
 		close(sockd);
 		return -1;
 	}
-	if(S_ISDIR(fileStat.st_mode)){
+	if(S_ISDIR(file_stat.st_mode)){
 		printf("ERROR: This is a directory not file, exiting...\n");
 		free(tmp_input);
 		free(input_file);
@@ -107,22 +108,22 @@ int do_send(const char *ip){
 		return -1;
 	}
 	file = basename(input_file); /* basename potrebbe modificare input_file così ne passo una copia e sono al sicuro */
-	fsize = strlen(file)+1;
-	if(send(sockd, &fsize, sizeof(fsize), 0) < 0){
+	file_size = strlen(file)+1;
+	if(send(sockd, &file_size, sizeof(file_size), 0) < 0){
 		free(input_file);
     		free(tmp_input);
 		close(sockd);
 		return -1;
 	}
-	if(send(sockd, file, fsize, 0) < 0){
+	if(send(sockd, file, file_size, 0) < 0){
 		printf("Error on sending the file name\n");
 	    	free(input_file);
     		free(tmp_input);
 		close(sockd);
 		return -1;
 	}
-	fsize = fileStat.st_size;
-	if(send(sockd, &fsize, sizeof(fsize), 0) < 0){
+	file_size = file_stat.st_size;
+	if(send(sockd, &file_size, sizeof(file_size), 0) < 0){
 		printf("Error on sending the file size\n");
     		 free(input_file);
     		free(tmp_input);	
@@ -154,7 +155,7 @@ int do_send(const char *ip){
   	}
 
   	tx = 0;
-	for(size_to_send = fsize; size_to_send > 0; ){
+	for(size_to_send = file_size; size_to_send > 0; ){
 		rc = sendfile(sockd, fd, &offset, size_to_send);
     		if(rc <= 0){
 	    		printf("Error on sendfile");
@@ -165,7 +166,7 @@ int do_send(const char *ip){
       			return -1;
     		}
     	    	tx += rc;
-   		printf("\r%zd%%", (tx * 100 / fsize));
+   		printf("\r%zd%%", (tx * 100 / file_size));
     		fflush(NULL);
     		size_to_send -= rc;
   	}

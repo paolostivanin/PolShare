@@ -1,74 +1,122 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <gcrypt.h>
+#include <nettle/md5.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/mman.h>
+#include <errno.h>
+
+#define MIN_FILE_SIZE 16777216
 
 
-char *check_md5(char *filename){
+char *
+check_md5 (const char *filename)
+{
+	int i, fd, ret;
+	off_t done_size = 0, diff = 0, offset = 0, file_size = 0;
+	unsigned char *addr = NULL, digest[MD5_DIGEST_SIZE];
+	char *hash;
+	struct stat fd_stat;
+	struct md5_ctx ctx;
+	
+	md5_init (&ctx);
 
-	int algo, i, fd;
-	off_t donesize = 0, diff = 0, fsize = 0;
-	FILE *fp;
-	char *buffer, *hashed = malloc(32);
-	struct stat fileStat;
-	const char *name = gcry_md_algo_name(GCRY_MD_MD5);
-
-	if(hashed == NULL){
-		printf("Error during memory allocation\n");
-		return (char *)1;
+	hash = malloc ((MD5_DIGEST_SIZE * 2) + 1);
+	if(hash == NULL)
+	{
+		fprintf (stderr, "Error during memory allocation (hash)\n");
+		return NULL;
 	}
 	
-	algo = gcry_md_map_name(name);
-	fd = open(filename, O_RDONLY);
-  	if(fstat(fd, &fileStat) < 0){
-  		perror("Fstat error");
-    	close(fd);
-    	return (char *)1;
+	fd = open (filename, O_RDONLY);
+	if (fd == -1)
+	{
+		fprintf (stderr, "%s\n", strerror (errno));
+		return NULL;
+	}
+	
+  	if (fstat (fd, &fd_stat) == -1)
+  	{
+  		fprintf (stderr, "%s\n", strerror (errno));
+  		close (fd);
+		return NULL;
   	}
-  	fsize = fileStat.st_size;
-  	close(fd);
   	
-	fp = fopen(filename, "r");
-	gcry_md_hd_t hd;
-	gcry_md_open(&hd, algo, 0);
-	if(fsize < 16){ //se il file è più piccolo di 16 allora in una chiamata ho finito;
-		buffer = malloc(fsize);
-  		if(buffer == NULL){
-  			printf("malloc error\n");
-  			exit(1);
-  		}
-		fread(buffer, 1, fsize, fp);
-		gcry_md_write(hd, buffer, fsize);
+  	file_size = fd_stat.st_size;
+
+	if (file_size < MIN_FILE_SIZE)
+	{
+		addr = mmap (NULL, file_size, PROT_READ, MAP_FILE | MAP_SHARED, fd, 0);
+		if (addr == MAP_FAILED)
+		{
+			fprintf (stderr, "check_md5: %s\n", strerror (errno));
+			return NULL;
+		}
+		
+		md5_update (&ctx, file_size, addr);
+		ret = munmap (addr, file_size);
+		if (ret == -1)
+		{
+			fprintf (stderr, "md5: munmap error\n");
+			return NULL;
+		}
 		goto nowhile;
 	}
-	buffer = malloc(16); // altrimenti alloco 16 byte al buffer...
-  	if(buffer == NULL){
-  		printf("malloc error\n");
-  		exit(1);
-  	}
-	while(fsize > donesize){ //...e finchè la grandezza del file è maggiore di quello letto...
-		fread(buffer, 1, 16, fp); //...leggo 16 byte alla volta...
-		gcry_md_write(hd, buffer, 16); //...scrivo 16 byte....
-		donesize+=16; //...aumento i byte letti di 16...
-		diff=fsize-donesize; //...calcolo la differenza...
-		if(diff < 16){ //...e se la differenza è minore di 16 allora termino con l'ultima chiamata...
-			fread(buffer, 1, diff, fp); //...che legge soltanto i byte necessari...
-			gcry_md_write(hd, buffer, diff); //...e li scrive!
+	
+	while (file_size > done_size)
+	{
+		addr = mmap(NULL, MIN_FILE_SIZE, PROT_READ, MAP_FILE | MAP_SHARED, fd, offset);
+		if (addr == MAP_FAILED)
+		{
+			fprintf (stderr, "check_md5: %s\n", strerror (errno));
+			return NULL;
+		}
+		
+		md5_update (&ctx, MIN_FILE_SIZE, addr);
+		
+		done_size += MIN_FILE_SIZE;
+		diff = file_size - done_size;
+		offset += MIN_FILE_SIZE;
+		
+		if (diff < MIN_FILE_SIZE && diff > 0)
+		{
+			addr = mmap (NULL, diff, PROT_READ, MAP_FILE | MAP_SHARED, fd, offset);
+			if (addr == MAP_FAILED)
+			{
+				fprintf (stderr, "check_md5: %s\n", strerror (errno));
+				return NULL;
+			}
+			
+			md5_update (&ctx, diff, addr);
+			
+			ret = munmap (addr, diff);
+			if (ret == -1)
+			{
+				fprintf (stderr, "check_md5: munmap error\n");
+				return NULL;
+			}
 			break;
 		}
+		
+		ret = munmap (addr, MIN_FILE_SIZE);
+		if (ret == -1)
+		{
+			fprintf (stderr, "check_md5: munmap error\n");
+			return NULL;
+		}
 	}
+	
 	nowhile:
-	gcry_md_final(hd);
-	unsigned char *md5 = gcry_md_read(hd, algo);
- 	for(i=0; i<16; i++){
- 		sprintf(hashed+(i*2), "%02x", md5[i]);
- 	}
- 	free(buffer);
- 	fclose(fp);
-	gcry_md_close(hd);
-	return hashed;
+	md5_digest (&ctx, MD5_DIGEST_SIZE, digest);
+ 	for (i = 0; i < MD5_DIGEST_SIZE; i++)
+ 		sprintf (hash+(i*2), "%02x", digest[i]);
+ 	
+ 	hash[MD5_DIGEST_SIZE * 2] = '\0';
+ 	
+ 	close (fd);
+ 	
+	return hash;
 }
