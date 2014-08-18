@@ -44,7 +44,7 @@ get_ipv4 (void)
 			if (s != 0)
 			{
 				fprintf (stderr, "getnameinfo() failed: %s\n", gai_strerror(s));
-				exit (EXIT_FAILURE);
+				return -1;
 			}
 			
 			if ((strcmp (host, "127.0.0.1") == 0) ||

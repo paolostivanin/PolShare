@@ -19,7 +19,7 @@ get_connected_ip (const char *ip)
 	
   	if (system (cmd) < 0)
   	{
-		fprintf(stderr, "[!] ERROR: Please install nmap.\n");
+		fprintf(stderr, "[!] Error on system (cmd)\n");
 		free (cmd);
 		return -1;
   	}
