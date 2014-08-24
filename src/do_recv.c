@@ -21,6 +21,7 @@
 #include "polshare.h"
 
 
+int get_ipv4 (void);
 static void signal_handler (int);
 static void cleanup (void);
 static void init_signals (void);

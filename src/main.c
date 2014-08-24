@@ -9,6 +9,13 @@
 #include <unistd.h>
 #include "polshare.h"
 
+
+int do_send (const char *);
+int do_recv (const char *);
+void get_connected_ip (const char *);
+int do_action (int, const char *);
+
+
 int
 main (	int argc,
 	char **argv)
@@ -68,7 +75,7 @@ int
 do_action (	int req,
 		const char *opt)
 {
-	int ret = -1, count = 0, ch = -1;
+	int count = 0, ch = -1;
 	char buf[4];
 	unsigned int i;
 	if (req == 1)
@@ -122,15 +129,15 @@ do_action (	int req,
 	{
 		printf ("Type CTRL+C to exit\n");
 		while (1)
-			do_recv(opt);
+			do_recv (opt);
 	}
 	else if (req == 3)
 	{
 		count = 0;
 		
-		if (strlen(opt) < 7 || strlen(opt) > 15)
+		if (strlen (opt) < 7 || strlen (opt) > 15)
 		{
-			printf ("Error: ip address too short or long\n");
+			fprintf (stderr, "[!] ERROR: this isn't a valid ip address\n");
 			return -1;
 		}
 		
@@ -138,7 +145,7 @@ do_action (	int req,
 		{
 			if ( !(isdigit (opt[i])) && opt[i] != '.')
 			{
-				printf ("Bad ip address\n");
+				fprintf (stderr, "[!] ERROR: this isn't a valid ip address\n");
 				return -1;
 			}
 			if (opt[i] == '.')
@@ -147,17 +154,11 @@ do_action (	int req,
 		
 		if (count != 3)
 		{
-			printf ("Bad ip address\n");
+			fprintf (stderr, "[!] ERROR: this isn't a valid ip address\n");
 			return -1;
 		}
-		printf ("IPv4 that are connected to your LAN:\n");
-		ret = get_connected_ip (opt);
-  		if (ret < 0)
-  		{
-   			printf ("Error during lan scan. You have to manually search to the active hosts into your LAN\n");
-   			return -1;
-  		}
-  		printf ("\n");
+
+		get_connected_ip (opt);
 	}
 	return 0;
 }	

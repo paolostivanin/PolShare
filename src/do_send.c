@@ -19,7 +19,9 @@
 #include "polshare.h"
 
 
+void remove_char (char *, const char);
 static void cleanup (char *, char *, char *, int, int);
+
 
 int
 do_send (const char *ip)

@@ -17,16 +17,16 @@
  
 
 static uint16_t cksum (void *, uint32_t);
-static int ping_ip (const char *, const char *);
+static void ping_ip (const char *, const char *);
 
 
-int 
+void 
 get_connected_ip (const char *src)
 {
 	if (getuid () != 0)
 	{
 		fprintf (stderr, "[!] ERROR: ping must be executed as root\n");
-		return -1;
+		exit (EXIT_FAILURE);
 	}
 	
 	int i;
@@ -66,11 +66,11 @@ get_connected_ip (const char *src)
 	free (src_ip);
 	free (ip_slice);
 	
-	return 0;
+	exit (EXIT_SUCCESS);
 }
 
 
-static int
+static void
 ping_ip (	const char *src_addr,
 		const char *dst_addr)
 {
@@ -85,11 +85,9 @@ ping_ip (	const char *src_addr,
      
 	packet = malloc (sizeof (struct iphdr) + sizeof (struct icmphdr));
 	buffer = malloc (sizeof (struct iphdr) + sizeof (struct icmphdr));
-     
-	//ip = (struct iphdr *) packet;
-	//icmp = (struct icmphdr *)(packet + sizeof (struct iphdr));
+
 	ip = malloc (sizeof (struct iphdr) + sizeof (struct icmphdr));
-	icmp = malloc (sizeof (struct iphdr) + sizeof (struct icmphdr));
+	icmp = malloc (sizeof (struct icmphdr));
 
 	ip->ihl		= 5;
 	ip->version	= 4;
@@ -106,7 +104,7 @@ ping_ip (	const char *src_addr,
 	if ((sockfd = socket (AF_INET, SOCK_RAW, IPPROTO_ICMP)) == -1)
 	{
 		fprintf (stderr, "%s\n", strerror (errno));
-		return -1;
+		exit (EXIT_FAILURE);
 	}
      
 	/* 
@@ -138,7 +136,7 @@ ping_ip (	const char *src_addr,
 	if (setsockopt (sockfd, SOL_SOCKET, SO_RCVTIMEO, (char *)&timeout, sizeof (timeout)) < 0)
 	{
 		fprintf (stderr, "%s\n", strerror (errno));
-		return -1;
+		exit (EXIT_FAILURE);
 	}
 	
 	if ((ret_bytes = recvfrom (sockfd, buffer, sizeof (struct iphdr) + sizeof (struct icmphdr), 0, (struct sockaddr *)&connection, &addrlen)) == -1)
@@ -148,17 +146,17 @@ ping_ip (	const char *src_addr,
 		else
 		{
 			fprintf (stderr, "%s\n", strerror (errno));
-			return -1;
+			exit (EXIT_FAILURE);
 		}
 	}
 	else
 		printf ("%s is online\n", dst_addr);
  
+	free (ip);
+	free (icmp);
 	free (packet);
 	free (buffer);
 	close (sockfd);
-	
-	return 0;
 }
 
 
